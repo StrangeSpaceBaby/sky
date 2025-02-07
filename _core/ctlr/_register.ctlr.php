@@ -41,7 +41,7 @@ class _register_ctlr extends _ctlr
 	 * @TODO review and fix logic. Move most of it to the register obj.
 	 * @return array|boolean array of registration details or FALSE on error
 	 */
-	public function register_co() : array|bool
+	public function register__co() : array|bool
 	{
 		p( _POST );
 
