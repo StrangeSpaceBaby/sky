@@ -28,12 +28,21 @@ class _enroll extends _obj
 
         $amount = intval(floatval($plan_data['_sub_plan_mth_price']) * 100);
 
-        $payment_result = $this->processPayment($data['payment'], $data['mem_email'], $amount);
+        $payment_vendor = $this->getPaymentVendor(); 
+
+        if ($payment_vendor === 'stripe') {
+            $payment_result = $this->processStripePayment($data['payment'], $data['mem_email'], $amount);
+        } elseif ($payment_vendor === 'gocardless') {
+            $payment_result = $this->processGoCardlessPayment($data['payment'], $data['mem_email'], $amount);
+        } else {
+            return ['success' => false, 'message' => 'Invalid payment vendor'];
+        }
+
         if (!$payment_result['success']) {
             return ['success' => false, 'message' => 'Payment failed: ' . $payment_result['message']];
         }
 
-        $saved = $this->saveEnrollment($data, $payment_result['charge_id']);
+        $saved = $this->saveEnrollment($data, $payment_result['transaction_id']);
         if (!$saved) {
             return ['success' => false, 'message' => 'Failed to save enrollment'];
         }
@@ -49,7 +58,7 @@ class _enroll extends _obj
      * @param int $amount
      * @return array
      */
-    public function processPayment(array $payment, string $email, int $amount): array
+    private function processStripePayment(array $payment, string $email, int $amount): array
     {
         try {
             $token = Token::create([
@@ -58,17 +67,17 @@ class _enroll extends _obj
                     'exp_month' => explode('/', $payment['expiration'])[0],
                     'exp_year' => explode('/', $payment['expiration'])[1],
                     'cvc' => $payment['cvv']
-                    ]
-                ]);
+                ]
+            ]);
 
             $charge = Charge::create([
                 'amount' => $amount,
                 'currency' => 'usd',
-                'source' => 'tok_visa',             //TODO: Use token here on live
+                'source' => $token->id, // Use generated token
                 'description' => 'Enrollment Payment for ' . $email
             ]);
 
-            return ['success' => true, 'charge_id' => $charge->id];
+            return ['success' => true, 'transaction_id' => $charge->id];
         } catch (\Stripe\Exception\CardException $e) {
             return ['success' => false, 'message' => 'Payment failed: ' . $e->getMessage()];
         } catch (\Exception $e) {
@@ -77,24 +86,49 @@ class _enroll extends _obj
     }
 
     /**
+     * Processes payment using GoCardless.
+     *
+     * @param array $payment
+     * @param string $email
+     * @param int $amount
+     * @return array
+     */
+    private function processGoCardlessPayment(array $payment, string $email, int $amount): array
+    {
+        // TODO: Implement GoCardless payment API
+        return ['success' => false, 'message' => 'GoCardless integration not yet implemented'];
+    }
+
+    /**
      * Saves enrollment and payment details to the database.
      *
      * @param array $data
-     * @param string $charge_id
+     * @param string $transaction_id
      * @return bool
      */
-    public function saveEnrollment(array $data, string $charge_id): bool
+    private function saveEnrollment(array $data, string $transaction_id): bool
     {
-        //TODO: It must be implemented as we store in the database
         $paymentData = [
             'mem_email' => $data['mem_email'],
-            'plan_id' => $data['plan_id'],
-            'charge_id' => $charge_id,
+            'sub_plan_id' => $data['plan_id'],
+            'transaction_id' => $transaction_id,
             'amount' => intval(floatval($data['_sub_plan_mth_price']) * 100),
             'payment_status' => 'completed',
             'created_at' => date('Y-m-d H:i:s')
         ];
 
-        return true; 
+        // TODO: Save to database
+        return true;
+    }
+
+    /**
+     * Retrieves the payment vendor setting from the admin panel.
+     *
+     * @return string
+     */
+    private function getPaymentVendor(): string
+    {
+        // TODO: Fetch from settings table in database
+        return 'stripe'; // Default to Stripe for now
     }
 }

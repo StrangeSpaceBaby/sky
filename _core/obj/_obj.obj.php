@@ -749,8 +749,6 @@ class _obj extends _da
 				}
 			}
 
-			$in = (float)$in;
-
 			for ($t = ($in != 0 ? floor(log($in, $base)) : 0); $t >= 0; $t--) {
 				$bcp = bcpow( (string) $base, (string) $t);
 				$a   = floor($in / $bcp) % $base;

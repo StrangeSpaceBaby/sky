@@ -1,0 +1,155 @@
+~~include:_master_head~~
+
+	<div class="d-flex">
+		<!-- Page Content -->
+		<div class="col-12">
+			<div class="row">
+				<h3>_enroll List</h3>
+			</div>
+			<div class="row">
+				<div class="col-12 mt-3" id="canvas">
+					<div class="col-12">
+						<div class="col-12 text-end">
+							<a href="javascript:void(0)" data-bs-backdrop="false" data-bs-toggle="modal" data-bs-target="#table_prefs_box" onClick="new _table({ table: '_enroll_list' }).initTable().then( () => { new _table({ table: '_enroll_list' }).openPrefs(); } );" class="btn btn-default"><i class="fa fa-gear text-primary"></i></a>
+							<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#table_filters_box" onClick="new _table({ table: '_enroll_list' }).openFilters();" class="btn btn-default"><i class="fa fa-filter text-primary"></i></a>
+							<a href="javascript:void(0)" onClick="new _loader({}).load( '#_enroll_list' );" class="btn btn-default"><i class="fa fa-redo-alt text-primary"></i></a>
+							<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#save__enroll_box" onClick="new _form({ form_id: 'save__enroll_form', autoform: true }).autoform();" class="btn btn-primary"><i class="fa fa-plus me-3"></i>Add New</a>
+						</div>
+						<table id="_enroll_table" class="form">
+							<thead>
+								<tr>
+									<th flare-col="_enroll_id" flare-col-type="int unsigned">_enroll_id</th>
+<th flare-col="fk__sub_plan_id" flare-col-type="int">fk__sub_plan_id</th>
+<th flare-col="fk__mem_id" flare-col-type="int">fk__mem_id</th>
+<th flare-col="mem_fname" flare-col-type="varchar">mem_fname</th>
+<th flare-col="mem_lname" flare-col-type="varchar">mem_lname</th>
+<th flare-col="mem_email" flare-col-type="varchar">mem_email</th>
+<th flare-col="mem_phone" flare-col-type="varchar">mem_phone</th>
+<th flare-col="billing_street" flare-col-type="varchar">billing_street</th>
+<th flare-col="billing_street2" flare-col-type="varchar">billing_street2</th>
+<th flare-col="billing_city" flare-col-type="varchar">billing_city</th>
+<th flare-col="billing_state" flare-col-type="varchar">billing_state</th>
+<th flare-col="billing_postal" flare-col-type="varchar">billing_postal</th>
+<th flare-col="cc_number" flare-col-type="varchar">cc_number</th>
+<th flare-col="cvv" flare-col-type="varchar">cvv</th>
+<th flare-col="expiration" flare-col-type="varchar">expiration</th>
+<th flare-col="_enroll_new" flare-col-type="timestamp">_enroll_new</th>
+<th flare-col="_enroll_edit" flare-col-type="timestamp">_enroll_edit</th>
+<th flare-col="_enroll_del" flare-col-type="timestamp">_enroll_del</th>
+<th flare-col="_enroll_arch" flare-col-type="timestamp">_enroll_arch</th>
+<th flare-col="_enroll_active" flare-col-type="tinyint">_enroll_active</th>
+<th flare-col="_enroll_ulid" flare-col-type="varchar">_enroll_ulid</th>
+<th class="text-center"><i class="fa fa-tools"></i></th>
+								</tr>
+							</thead>
+							<tbody
+								id="_enroll_list" class="autoload _enroll_list"
+								flare-src="/_enroll/list"
+								flare-tpl="_enroll_list_tpl"
+								flare-when-empty="<div class='list-group-item'>No _enroll to display</div>"
+							>
+							</tbody>
+						<table>
+						<template id="_enroll_list_tpl" class="d-none">
+							<tr id="_enroll_~~_enroll_id~~" class=""
+								flare-filter-_enroll_id=~~_enroll_id~~
+flare-filter-fk__sub_plan_id=~~fk__sub_plan_id~~
+flare-filter-fk__mem_id=~~fk__mem_id~~
+flare-filter-mem_fname=~~mem_fname~~
+flare-filter-mem_lname=~~mem_lname~~
+flare-filter-mem_email=~~mem_email~~
+flare-filter-mem_phone=~~mem_phone~~
+flare-filter-billing_street=~~billing_street~~
+flare-filter-billing_street2=~~billing_street2~~
+flare-filter-billing_city=~~billing_city~~
+flare-filter-billing_state=~~billing_state~~
+flare-filter-billing_postal=~~billing_postal~~
+flare-filter-cc_number=~~cc_number~~
+flare-filter-cvv=~~cvv~~
+flare-filter-expiration=~~expiration~~
+flare-filter-_enroll_new=~~_enroll_new~~
+flare-filter-_enroll_edit=~~_enroll_edit~~
+flare-filter-_enroll_del=~~_enroll_del~~
+flare-filter-_enroll_arch=~~_enroll_arch~~
+flare-filter-_enroll_active=~~_enroll_active~~
+flare-filter-_enroll_ulid=~~_enroll_ulid~~
+							>
+								<td flare-col="_enroll_id" flare-col-type="int unsigned">~~_enroll_id~~</td>
+<td flare-col="fk__sub_plan_id" flare-col-type="int">~~fk__sub_plan_id~~</td>
+<td flare-col="fk__mem_id" flare-col-type="int">~~fk__mem_id~~</td>
+<td flare-col="mem_fname" flare-col-type="varchar">~~mem_fname~~</td>
+<td flare-col="mem_lname" flare-col-type="varchar">~~mem_lname~~</td>
+<td flare-col="mem_email" flare-col-type="varchar">~~mem_email~~</td>
+<td flare-col="mem_phone" flare-col-type="varchar">~~mem_phone~~</td>
+<td flare-col="billing_street" flare-col-type="varchar">~~billing_street~~</td>
+<td flare-col="billing_street2" flare-col-type="varchar">~~billing_street2~~</td>
+<td flare-col="billing_city" flare-col-type="varchar">~~billing_city~~</td>
+<td flare-col="billing_state" flare-col-type="varchar">~~billing_state~~</td>
+<td flare-col="billing_postal" flare-col-type="varchar">~~billing_postal~~</td>
+<td flare-col="cc_number" flare-col-type="varchar">~~cc_number~~</td>
+<td flare-col="cvv" flare-col-type="varchar">~~cvv~~</td>
+<td flare-col="expiration" flare-col-type="varchar">~~expiration~~</td>
+<td flare-col="_enroll_new" flare-col-type="timestamp">~~_enroll_new~~</td>
+<td flare-col="_enroll_edit" flare-col-type="timestamp">~~_enroll_edit~~</td>
+<td flare-col="_enroll_del" flare-col-type="timestamp">~~_enroll_del~~</td>
+<td flare-col="_enroll_arch" flare-col-type="timestamp">~~_enroll_arch~~</td>
+<td flare-col="_enroll_active" flare-col-type="tinyint">~~_enroll_active~~</td>
+<td flare-col="_enroll_ulid" flare-col-type="varchar">~~_enroll_ulid~~</td>
+
+								<td>
+									<div class="btn-group">
+										<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#save__enroll_box"
+											onClick="
+												_dom.val('#save__enroll_box__enroll_id', '_enroll_id');
+												new _form({ form_id: 'save__enroll_form', autoform: true }).autoform()
+												.then(
+													() =>
+													{
+														new _api({ url: '/_enroll/fetch/~~_enroll_id~~' })
+														.poll()
+														.then(
+															function( _ret )
+															{
+																if( 1 == _ret.return )
+																{
+																	new _form({ form_id: 'save__enroll_form', data: _ret.data }).popForm();
+																}
+															}
+														);
+													}
+												);
+											">Edit
+										</button>
+										<button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+											<span class="visually-hidden">Toggle Dropdown</span>
+										</button>
+										<ul class="dropdown-menu">
+											<li><a href="javascript:void(0);" class="dropdown-item"
+												onClick="
+													if( confirm( 'Are you sure you want to delete?' ) )
+													{
+														new _api({ url: '/_enroll/delete/~~_enroll_id~~' })
+															.poll()
+															.then(
+																() =>
+																{
+																	new _loader({}).load( '._enroll_list' );
+																}
+															);
+													}">Delete
+											</a></li>
+										</ul>
+									</div>
+								</td>
+							</tr>
+						</template>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+<div id="save__enroll_modal_tpl" class="autotpl" data-tpl="modal/_enroll_save"></div>
+
+~~include:_master_foot~~

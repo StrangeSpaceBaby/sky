@@ -16,7 +16,7 @@ class _enroll_ctlr extends _ctlr
     public function save(): bool
     {
         $data = [
-            'plan_id' => _POST['plan_id'] ?? null,
+            'sub_plan_id' => _POST['sub_plan_id'] ?? null,
             'mem_fname' => _POST['mem_fname'] ?? null,
             'mem_lname' => _POST['mem_lname'] ?? null,
             'mem_email' => _POST['mem_email'] ?? null,
