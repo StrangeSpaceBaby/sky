@@ -25,6 +25,7 @@ final class CreateEnrollTable extends AbstractMigration
               ->addColumn('cc_number', 'string', ['limit' => 20, 'null' => false])
               ->addColumn('cvv', 'string', ['limit' => 5, 'null' => false])
               ->addColumn('expiration', 'string', ['limit' => 10, 'null' => false])
+              ->addColumn('transaction_id', 'string', ['limit' => 50, 'null' => false])
               ->addColumn($this->table_name . '_new', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
               ->addColumn($this->table_name . '_edit', 'timestamp', ['default' => 'CURRENT_TIMESTAMP', 'update' => 'CURRENT_TIMESTAMP', 'null' => true])
               ->addColumn($this->table_name . '_del', 'timestamp', ['null' => true])

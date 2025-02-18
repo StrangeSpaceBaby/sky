@@ -99,7 +99,7 @@ class _safe_map extends _da
 		}
 	}
 
-	public function convert_get_ulids( string $table, array|string $get_vals = [] ) : array
+	public function convert_get_ulids( string $table, array|string $get_vals = [] ) : array|string
 	{
 		if( !$table )
 		{
