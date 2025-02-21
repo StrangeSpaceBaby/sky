@@ -1,0 +1,51 @@
+FROM ubuntu:noble
+
+# Stop dpkg-reconfigure tzdata from prompting for input
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install apache and php7
+RUN apt-get update && \
+    apt-get -y install \
+        apache2 \
+        libapache2-mod-php \
+        libapache2-mod-auth-openidc \
+        php-bcmath \
+        php-cli \
+        php-curl \
+        php-gd \
+        php-intl \
+        php-json \
+        php-ldap \
+        php-mbstring \
+        php-memcached \
+        php-mysql \
+        php-pgsql \
+        php-soap \
+        php-tidy \
+        php-uploadprogress \
+        php-xml \
+        php-xmlrpc \
+        php-yaml \
+        php-zip \
+# Ensure apache can bind to 80 as non-root
+        libcap2-bin && \
+    setcap 'cap_net_bind_service=+ep' /usr/sbin/apache2 && \
+    dpkg --purge libcap2-bin && \
+    apt-get -y autoremove && \
+# As apache is never run as root, change dir ownership
+    a2disconf other-vhosts-access-log && \
+    chown -Rh www-data:www-data /var/run/apache2 && \
+# Install ImageMagick CLI tools
+    apt-get -y install --no-install-recommends imagemagick && \
+# Clean up apt setup files
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+# Setup apache
+    a2enmod rewrite headers expires ext_filter
+
+
+
+EXPOSE 80
+
+
+ENTRYPOINT ["apache2ctl", "-D", "FOREGROUND"]
