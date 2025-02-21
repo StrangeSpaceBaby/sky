@@ -19,25 +19,31 @@ class _enroll extends _obj
         ]);
     }
 
-    public function handleEnrollment(array $data): array
+    public function handleEnrollment(array $data): bool
     {
         $plan = (new _sub_plan())->get_by_id($data['plan_id']);
         if (!$plan) {
-            return ['success' => false, 'message' => 'Invalid subscription plan'];
+            $this->fail('Invalid subscription plan');
+            return FALSE;
         }
-
+    
         $member = (new _mem())->get_by_col(['_mem_email' => $data['email']]);
         if (!$member) {
-            return ['success' => false, 'message' => 'Member not found'];
+            $this->fail('Member not found');
+            return FALSE;
         }
-
+    
         $company = (new _co())->get_by_col(['fk__mem_id' => $member['_mem_email']]);
         $companyVendor = (new _co_vendor())->get_by_col(['fk__co_id' => $company['_co_id']]);
         $vendor = (new _vendor())->get_by_col(['_vendor_id' => $companyVendor['fk__vendor_id']]);
-
+    
         $amount = intval($plan['_sub_plan_mth_price'] * 100);
-
-        switch (strtolower($vendor['_vendor_name'])) {
+    
+        //TODO: Temporarily default to Stripe, overriding vendor selection
+        $defaultVendor = 'stripe';
+        $selectedVendor = $defaultVendor ?: strtolower($vendor['_vendor_name']);
+        
+        switch ($selectedVendor) {
             case 'stripe':
                 $paymentResult = $this->processStripePayment($data['payment'], $data['email'], $amount);
                 break;
@@ -45,20 +51,24 @@ class _enroll extends _obj
                 $paymentResult = $this->processGoCardlessPayment($data['payment'], $data['email'], $amount);
                 break;
             default:
-                return ['success' => false, 'message' => 'Unsupported payment vendor'];
+                $this->fail('Unsupported payment vendor');
+                return FALSE;
         }
-
-        if (!$paymentResult['success']) {
-            return ['success' => false, 'message' => 'Payment failed: ' . $paymentResult['message']];
+    
+        if (!$paymentResult) {
+            $this->fail('Payment failed');
+            return FALSE;
         }
-
+    
         $saved = $this->saveEnrollment($data, $paymentResult['transaction_id'], $amount);
         if (!$saved) {
-            return ['success' => false, 'message' => 'Failed to save enrollment details'];
+            $this->fail('Failed to save enrollment details');
+            return FALSE;
         }
-
-        return ['success' => true];
+    
+        return TRUE;
     }
+
 
     /**
      * Processes payment using Stripe.
@@ -68,7 +78,7 @@ class _enroll extends _obj
      * @param int $amount
      * @return array
      */
-    private function processStripePayment(array $payment, string $email, int $amount): array
+    private function processStripePayment(array $payment, string $email, int $amount): string|false
     {
         try {
             $token = Token::create([
@@ -79,21 +89,21 @@ class _enroll extends _obj
                     'cvc' => $payment['cvv'],
                 ],
             ]);
-
+    
             $charge = Charge::create([
                 'amount' => $amount,
                 'currency' => 'usd',
                 'source' => $token->id,
                 'description' => 'Enrollment Payment - ' . $email,
             ]);
-
-            return ['success' => true, 'transaction_id' => $charge->id];
-        } catch (\Stripe\Exception\CardException $e) {
-            return ['success' => false, 'message' => $e->getMessage()];
+    
+            return $charge->id;
         } catch (\Exception $e) {
-            return ['success' => false, 'message' => 'Unexpected error: ' . $e->getMessage()];
+            $this->fail($e->getMessage());
+            return FALSE;
         }
     }
+
 
     /**
      * Processes payment using GoCardless.
@@ -103,7 +113,7 @@ class _enroll extends _obj
      * @param int $amount
      * @return array
      */
-    private function processGoCardlessPayment(array $payment, string $email, int $amount): array
+    private function processGoCardlessPayment(array $payment, string $email, int $amount): string|false
     {
         try {
             $customer = $this->gcClient->customers()->create([
@@ -132,7 +142,7 @@ class _enroll extends _obj
     
             $mandate = $this->gcClient->mandates()->create([
                 "params" => [
-                    "scheme" => "bacs", 
+                    "scheme" => "bacs",
                     "links" => [
                         "customer_bank_account" => $customerBankAccount->id,
                     ]
@@ -150,14 +160,13 @@ class _enroll extends _obj
                 ]
             ]);
     
-            return ['success' => true, 'transaction_id' => $paymentResponse->id];
-        } catch (\GoCardlessPro\Core\Exception\ApiException $e) {
-            return ['success' => false, 'message' => $e->getMessage()];
+            return $paymentResponse->id;
         } catch (\Exception $e) {
-            return ['success' => false, 'message' => 'Unexpected error: ' . $e->getMessage()];
+            $this->fail($e->getMessage());
+            return FALSE;
         }
-    }    
-
+    }
+    
     /**
      * Saves enrollment and payment details to the database.
      *
@@ -210,10 +219,10 @@ class _enroll extends _obj
                 throw new Exception('Failed to insert payment history');
             }
     
-            return true;
+            return TRUE;
         } catch (Exception $e) {
             error_log('Enrollment save failed: ' . $e->getMessage());
-            return false;
+            return FALSE;
         }
     }
 

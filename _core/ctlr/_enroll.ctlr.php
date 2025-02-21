@@ -15,29 +15,20 @@ class _enroll_ctlr extends _ctlr
      */
     public function save(): bool
     {
-        $data = [
-            'sub_plan_id' => _POST['sub_plan_id'] ?? null,
-            'mem_fname' => _POST['mem_fname'] ?? null,
-            'mem_lname' => _POST['mem_lname'] ?? null,
-            'mem_email' => _POST['mem_email'] ?? null,
-            'mem_phone' => _POST['mem_phone'] ?? null,
-            'billing_address' => _POST['billing_address'] ?? [],
-            'payment' => _POST['payment'] ?? []
-        ];
-
-        if (!$data['plan_id'] || !$data['mem_email'] || empty($data['payment'])) {
+        if (empty(_POST['sub_plan_id']) || empty(_POST['mem_email']) || empty(_POST['payment'])) {
             $this->fail('Missing required fields.');
-            return false;
+            return FALSE;
         }
-
-        $result = $this->obj->handleEnrollment($data);
-
-        if (!$result['success']) {
+    
+        $result = $this->obj->handleEnrollment(_POST);
+    
+        if (!$result) {
             $this->fail($result['message']);
-            return false;
+            return FALSE;
         }
-
+    
         $this->success('Enrollment completed successfully');
-        return true;
+        return TRUE;
     }
+    
 }
