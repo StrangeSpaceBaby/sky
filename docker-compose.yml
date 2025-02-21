@@ -1,0 +1,35 @@
+services:
+  apache_back:
+    build: 
+       dockerfile: ./docker/app/Dockerfile
+    container_name: apache_back
+    hostname: apache_back
+    volumes:
+      - ./:/var/www/html
+      - ./conf/http/apache2.vhost.conf:/etc/apache2/sites-available/000-default.conf
+      - ./data/logs/apache:/var/logs/apache2
+    ports:
+      - 80:80
+    networks:
+      - edy_local
+
+  mysql:
+    image: mysql:latest
+    restart: always
+    container_name: mysql
+    hostname: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: db_sky
+      MYSQL_USER: demo@demo.com
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./data/db:/var/lib/mysql
+    networks:
+      - edy_local
+
+networks:
+  edy_local: 
+     driver: bridge

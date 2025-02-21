@@ -116,7 +116,7 @@ class _mem_auth extends _obj
 	 */
 	public function check_login_exists( string $login ) : int|bool
 	{
-		$login = $this->get_by_col([ '_mem_login' => $login ], FALSE, TRUE, [], "fk__mem_id" );
+		$login = $this->get_by_col([ '_mem_auth_login' => $login ], FALSE, TRUE, [], "fk__mem_id" );
 		if( FALSE === $login )
 		{
 			$this->fail( 'could_not_check_logins' );

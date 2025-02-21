@@ -324,8 +324,7 @@ class _obj extends _da
 	 * @param int $result_limit
 	 * @return array|boolean
 	 */
-	public function get_by_col
-	(
+	public function get_by_col(
 		array $cols_and_vals = array(),
 		bool $enforce_multi_array = FALSE,
 		bool $exclude_inactive = TRUE,

@@ -18,13 +18,14 @@
 
 Options +FollowSymLinks
 
-#Rewrite rules
+# Enable the rewrite engine
 RewriteEngine on
 
-# If the request is a file, folder or symlink that exists, serve it up
+# If the request is a file, folder, or symlink that exists, serve it
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^(.+)$ - [S=1]
 
-# otherwise, serve your index.html app
-RewriteRule ^(.+)$ /index.php?sky_request=$1 [L]
+# Otherwise, rewrite the URL and append the existing query string
+RewriteRule ^(.+)$ /index.php?sky_request=$1 [QSA,L]
+

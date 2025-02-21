@@ -12,7 +12,7 @@ class _sub_plan_model extends _model
 		$this->log_chan( '_sub_plan_model' );
 
 		$this->cols = [
-						"_sub_plan_id" => "int",
+			"_sub_plan_id" => "int",
 			"_sub_plan_new" => "timestamp",
 			"_sub_plan_edit" => "timestamp",
 			"_sub_plan_del" => "timestamp",
@@ -24,12 +24,12 @@ class _sub_plan_model extends _model
 			"_sub_plan_mth_price" => "decimal",
 			"_sub_plan_yr_price" => "decimal",
 			"_sub_plan_name" => "varchar",
-			"_sub_plan_desc" => "text",
+			"_sub_plan_text" => "text",
 			"_sub_plan_ulid" => "char"
 		];
 
 		$this->select_cols = [
-						"_sub_plan_id" => "int",
+			"_sub_plan_id" => "int",
 			"_sub_plan_new" => "timestamp",
 			"_sub_plan_edit" => "timestamp",
 			"_sub_plan_active" => "tinyint",
@@ -38,7 +38,7 @@ class _sub_plan_model extends _model
 			"_sub_plan_mth_price" => "decimal",
 			"_sub_plan_yr_price" => "decimal",
 			"_sub_plan_name" => "varchar",
-			"_sub_plan_desc" => "text",
+			"_sub_plan_text" => "text",
 			"_sub_plan_ulid" => "char"
 		];
 

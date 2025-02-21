@@ -22,6 +22,7 @@ class _co extends _obj
 	{
 		$sth = $this->query('
 			SELECT
+			    _co_id,
 				_co_name,
 				_co_domain,
 				DATE_FORMAT( _co_new, "%Y-%m-%d %H:%i" ) AS _co_new,
@@ -53,7 +54,7 @@ class _co extends _obj
 		return $_cos;
 	}
 
-	public function get_by_owner__mem_id( int $_mem_id ) : int|bool
+	public function get_by_owner__mem_id( int $_mem_id ) : array|bool
 	{
 		// Has to be raw query because of checking across all _co
 		$query = "SELECT * FROM _co WHERE fk__mem_id = ?";

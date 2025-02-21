@@ -9,6 +9,7 @@ class _register_ctlr extends _ctlr
 	public function __construct()
 	{
 		parent::__construct( '_register' );
+		$this->log_chan( '_register' )->log_lvl( 'error' );
 	}
 
 	/**
@@ -36,57 +37,46 @@ class _register_ctlr extends _ctlr
 	 * This method makes check for uniqueness of subdomain
 	 * and owner _mem and calls $this->obj->register__co().
 	 *
-	 * @deprecated
-	 * @TODO review and fix logic. Move most of it to the register obj.
 	 * @return array|boolean array of registration details or FALSE on error
 	 */
 	public function register__co() : array|bool
 	{
-		p( _POST );
-
-		if( !_POST['tos_agree'] )
-		{
-			$this->fail( 'tos_agreement_needed' );
+		p(_POST);
+	
+		if (empty(_POST['tos_agree'])) {
+			$this->fail('tos_agreement_needed');
 			return FALSE;
 		}
-
-		if( !_POST['pp_agree'] )
-		{
-			$this->fail( 'pp_agreement_needed' );
+	
+		if (empty(_POST['pp_agree'])) {
+			$this->fail('pp_agreement_needed');
 			return FALSE;
 		}
-
-		$username = _POST['_mem_login'];
-
-		$username = filter_var( $username, FILTER_VALIDATE_EMAIL );
-		$username_verify = filter_var( $_POST['_mem_login_verify'], FILTER_VALIDATE_EMAIL );
-
-		if( FALSE === $username )
-		{
-			$this->fail( 'not_a_valid_email' );
+	
+		$username = filter_var(_POST['_mem_login'], FILTER_VALIDATE_EMAIL);
+		$username_verify = filter_var(_POST['_mem_login_verify'], FILTER_VALIDATE_EMAIL);
+	
+		if (!$username) {
+			$this->fail('not_a_valid_email');
 			return FALSE;
 		}
-
-		if( $username != $username_verify )
-		{
-			$this->fail( 'emails_do_not_match' );
+	
+		if ($username !== $username_verify) {
+			$this->fail('emails_do_not_match');
 			return FALSE;
 		}
-
+	
 		$co_vars = _POST;
-		if( !_POST['_mem_email'] )
-		{
-			$co_vars['_mem_email'] = $username;
-		}
-
-		$saved = $this->obj->register__co( $co_vars );
-		if( FALSE === $saved )
-		{
-			$this->fail( $this->obj->get_error_msg() );
+		$co_vars['_mem_email'] = $co_vars['_mem_email'] ?? $username;
+	
+		$saved = $this->obj->register__co($co_vars);
+	
+		if (!$saved) {
+			$this->fail($this->obj->get_error_msg());
 			return FALSE;
 		}
-
-		$this->success( '_co_registration_successful' );
+	
+		$this->success('_co_registration_successful');
 		return $saved;
 	}
 }

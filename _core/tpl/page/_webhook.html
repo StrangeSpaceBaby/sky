@@ -1,0 +1,119 @@
+~~include:_master_head~~
+
+	<div class="d-flex">
+		<!-- Page Content -->
+		<div class="col-12">
+			<div class="row">
+				<h3>_webhook List</h3>
+			</div>
+			<div class="row">
+				<div class="col-12 mt-3" id="canvas">
+					<div class="col-12">
+						<div class="col-12 text-end">
+							<a href="javascript:void(0)" data-bs-backdrop="false" data-bs-toggle="modal" data-bs-target="#table_prefs_box" onClick="new _table({ table: '_webhook_list' }).initTable().then( () => { new _table({ table: '_webhook_list' }).openPrefs(); } );" class="btn btn-default"><i class="fa fa-gear text-primary"></i></a>
+							<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#table_filters_box" onClick="new _table({ table: '_webhook_list' }).openFilters();" class="btn btn-default"><i class="fa fa-filter text-primary"></i></a>
+							<a href="javascript:void(0)" onClick="new _loader({}).load( '#_webhook_list' );" class="btn btn-default"><i class="fa fa-redo-alt text-primary"></i></a>
+							<a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#save__webhook_box" onClick="new _form({ form_id: 'save__webhook_form', autoform: true }).autoform();" class="btn btn-primary"><i class="fa fa-plus me-3"></i>Add New</a>
+						</div>
+						<table id="_webhook_table" class="form">
+							<thead>
+								<tr>
+									<th flare-col="_webhook_id" flare-col-type="int unsigned">_webhook_id</th>
+<th flare-col="_webhook_new" flare-col-type="timestamp">_webhook_new</th>
+<th flare-col="_webhook_edit" flare-col-type="timestamp">_webhook_edit</th>
+<th flare-col="_webhook_del" flare-col-type="timestamp">_webhook_del</th>
+<th flare-col="_webhook_arch" flare-col-type="timestamp">_webhook_arch</th>
+<th flare-col="_webhook_active" flare-col-type="tinyint">_webhook_active</th>
+<th flare-col="fk__vendor_id" flare-col-type="int">fk__vendor_id</th>
+<th flare-col="_webhook_type" flare-col-type="enum">_webhook_type</th>
+<th flare-col="_webhook_payload" flare-col-type="json">_webhook_payload</th>
+<th class="text-center"><i class="fa fa-tools"></i></th>
+								</tr>
+							</thead>
+							<tbody
+								id="_webhook_list" class="autoload _webhook_list"
+								flare-src="/_webhook/list"
+								flare-tpl="_webhook_list_tpl"
+								flare-when-empty="<div class='list-group-item'>No _webhook to display</div>"
+							>
+							</tbody>
+						<table>
+						<template id="_webhook_list_tpl" class="d-none">
+							<tr id="_webhook_~~_webhook_id~~" class=""
+								flare-filter-_webhook_id=~~_webhook_id~~
+flare-filter-_webhook_new=~~_webhook_new~~
+flare-filter-_webhook_edit=~~_webhook_edit~~
+flare-filter-_webhook_del=~~_webhook_del~~
+flare-filter-_webhook_arch=~~_webhook_arch~~
+flare-filter-_webhook_active=~~_webhook_active~~
+flare-filter-fk__vendor_id=~~fk__vendor_id~~
+flare-filter-_webhook_type=~~_webhook_type~~
+flare-filter-_webhook_payload=~~_webhook_payload~~
+							>
+								<td flare-col="_webhook_id" flare-col-type="int unsigned">~~_webhook_id~~</td>
+<td flare-col="_webhook_new" flare-col-type="timestamp">~~_webhook_new~~</td>
+<td flare-col="_webhook_edit" flare-col-type="timestamp">~~_webhook_edit~~</td>
+<td flare-col="_webhook_del" flare-col-type="timestamp">~~_webhook_del~~</td>
+<td flare-col="_webhook_arch" flare-col-type="timestamp">~~_webhook_arch~~</td>
+<td flare-col="_webhook_active" flare-col-type="tinyint">~~_webhook_active~~</td>
+<td flare-col="fk__vendor_id" flare-col-type="int">~~fk__vendor_id~~</td>
+<td flare-col="_webhook_type" flare-col-type="enum">~~_webhook_type~~</td>
+<td flare-col="_webhook_payload" flare-col-type="json">~~_webhook_payload~~</td>
+
+								<td>
+									<div class="btn-group">
+										<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#save__webhook_box"
+											onClick="
+												_dom.val('#save__webhook_box__webhook_id', '_webhook_id');
+												new _form({ form_id: 'save__webhook_form', autoform: true }).autoform()
+												.then(
+													() =>
+													{
+														new _api({ url: '/_webhook/fetch/~~_webhook_id~~' })
+														.poll()
+														.then(
+															function( _ret )
+															{
+																if( 1 == _ret.return )
+																{
+																	new _form({ form_id: 'save__webhook_form', data: _ret.data }).popForm();
+																}
+															}
+														);
+													}
+												);
+											">Edit
+										</button>
+										<button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+											<span class="visually-hidden">Toggle Dropdown</span>
+										</button>
+										<ul class="dropdown-menu">
+											<li><a href="javascript:void(0);" class="dropdown-item"
+												onClick="
+													if( confirm( 'Are you sure you want to delete?' ) )
+													{
+														new _api({ url: '/_webhook/delete/~~_webhook_id~~' })
+															.poll()
+															.then(
+																() =>
+																{
+																	new _loader({}).load( '._webhook_list' );
+																}
+															);
+													}">Delete
+											</a></li>
+										</ul>
+									</div>
+								</td>
+							</tr>
+						</template>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+<div id="save__webhook_modal_tpl" class="autotpl" data-tpl="modal/_webhook_save"></div>
+
+~~include:_master_foot~~

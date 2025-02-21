@@ -71,7 +71,7 @@ class _ctlr extends _fail
 	 *	@return  bool|array	FALSE on failure, array of the object requested on success
 	 */
 
-	public function fetch( int $id ) : bool|array
+	public function fetch(int $id) : bool|array
 	{
 		$fetched = $this->obj->get_by_id( $id );
 
